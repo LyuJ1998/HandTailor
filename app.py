@@ -3,6 +3,7 @@ import numpy as np
 import pygame
 import torch
 import time
+import argparse
 import torch.backends.cudnn as cudnn
 import pyrealsense2 as rs
 import jax.numpy as npj
@@ -142,7 +143,7 @@ def mano_de_j(so3, beta):
     j = joint_mano[0]
     return j
 
-def live_application(capture):
+def live_application(capture,arg):
     window_size = 768
     pygame.init()
     display = pygame.display.set_mode((window_size, window_size))
@@ -156,15 +157,38 @@ def live_application(capture):
 
     face = np.loadtxt("hand.npy").astype(np.int32)
     renderer = utils.MeshRenderer(face, img_size=256)
+
+    cx = arg.cx
+    cy = arg.cy
+    fx = arg.fx
+    fy = arg.fy
+
+    while True:
+        img = capture.read()
+        if img is None:
+            continue
+        if img.shape[0] > img.shape[1]:
+            margin = int((img.shape[0] - img.shape[1]) / 2)
+            cy = cy - margin
+            width = img.shape[1]
+        elif img.shape[0] < img.shape[1]:
+            margin = int((img.shape[1] - img.shape[0]) / 2)
+            cx = cx - margin
+            width = img.shape[0]
+        cx = (cx * 256)/width
+        cy = (cy * 256)/width
+        fx = (fx * 256)/width
+        fy = (fy * 256)/width
+        break
     
     intr = torch.from_numpy(np.array([
-                [330.429, 0.0, 123.86],
-                [0.0, 330.33, 130.44],
+                [fx, 0.0, cx],
+                [0.0, fy, cy],
                 [0.0, 0.0, 1.0],
             ], dtype=np.float32)).unsqueeze(0).to(device)
 
     _intr = intr.cpu().numpy()
-    print("Use the K of your camera!!!")
+
     camparam = np.zeros((1, 21, 4))
     camparam[:, :, 0] = _intr[:, 0, 0]
     camparam[:, :, 1] = _intr[:, 1, 1]
@@ -229,4 +253,30 @@ def live_application(capture):
             pygame.display.update()
 
 if __name__ == '__main__':
-    live_application(RealSenseCapture())
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        '--cx',
+        type=float,
+        default=321.2842102050781,
+    )
+
+    parser.add_argument(
+        '--cy',
+        type=float,
+        default=235.8609161376953,
+    )
+
+    parser.add_argument(
+        '--fx',
+        type=float,
+        default=612.0206298828125,
+    )
+
+    parser.add_argument(
+        '--fy',
+        type=float,
+        default=612.2821044921875,
+    )
+
+    live_application(RealSenseCapture(),parser.parse_args())

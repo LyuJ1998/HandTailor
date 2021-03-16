@@ -8,6 +8,7 @@ import pyrealsense2 as rs
 import jax.numpy as npj
 import PIL.Image as Image
 import glob
+import argparse
 from jax import grad, jit, vmap
 from jax.experimental import optimizers
 from torchvision.transforms import functional
@@ -131,7 +132,7 @@ def mano_de_j(so3, beta):
     j = joint_mano[0]
     return j
 
-def live_application():
+def live_application(arg):
     model = HandNet()
     model = model.to(device)
     checkpoint_io = CheckpointIO('.', model=model)
@@ -141,19 +142,10 @@ def live_application():
     face = np.loadtxt("hand.npy").astype(np.int32)
     renderer = utils.MeshRenderer(face, img_size=256)
     
-    intr = torch.from_numpy(np.array([
-                [330.429, 0.0, 123.86],
-                [0.0, 330.33, 130.44],
-                [0.0, 0.0, 1.0],
-            ], dtype=np.float32)).unsqueeze(0).to(device)
-
-    _intr = intr.cpu().numpy()
-    print("Use the K of your camera!!!")
-    camparam = np.zeros((1, 21, 4))
-    camparam[:, :, 0] = _intr[:, 0, 0]
-    camparam[:, :, 1] = _intr[:, 1, 1]
-    camparam[:, :, 2] = _intr[:, 0, 2]
-    camparam[:, :, 3] = _intr[:, 1, 2]
+    cx = arg.cx
+    cy = arg.cy
+    fx = arg.fx
+    fy = arg.fy
     
     gr = jit(grad(residuals))
     lr = 0.03
@@ -172,11 +164,34 @@ def live_application():
             if img.shape[0] > img.shape[1]:
                 margin = int((img.shape[0] - img.shape[1]) / 2)
                 img = img[margin:-margin]
+                cy = cy - margin
+                width = img.shape[1]
             elif img.shape[0] < img.shape[1]:
                 margin = int((img.shape[1] - img.shape[0]) / 2)
                 img = img[:, margin:-margin]
+                cx = cx - margin
+            width = img.shape[0]
             img = cv2.resize(img, (256, 256),cv2.INTER_LINEAR)
             frame = img.copy()
+
+            cx = (cx * 256)/width
+            cy = (cy * 256)/width
+            fx = (fx * 256)/width
+            fy = (fy * 256)/width
+
+            intr = torch.from_numpy(np.array([
+                        [fx, 0.0, cx],
+                        [0.0, fy, cy],
+                        [0.0, 0.0, 1.0],
+                    ], dtype=np.float32)).unsqueeze(0).to(device)
+
+            _intr = intr.cpu().numpy()
+
+            camparam = np.zeros((1, 21, 4))
+            camparam[:, :, 0] = _intr[:, 0, 0]
+            camparam[:, :, 1] = _intr[:, 1, 1]
+            camparam[:, :, 2] = _intr[:, 0, 2]
+            camparam[:, :, 3] = _intr[:, 1, 2]
 
             img = functional.to_tensor(img).float()
             img = functional.normalize(img, [0.5, 0.5, 0.5], [1, 1, 1])
@@ -213,4 +228,30 @@ def live_application():
             cv2.imwrite("./out/" + str(i) + "_output.png", np.flip(frame1,-1))
 
 if __name__ == '__main__':
-    live_application()
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        '--cx',
+        type=float,
+        default=321.2842102050781,
+    )
+
+    parser.add_argument(
+        '--cy',
+        type=float,
+        default=235.8609161376953,
+    )
+
+    parser.add_argument(
+        '--fx',
+        type=float,
+        default=612.0206298828125,
+    )
+
+    parser.add_argument(
+        '--fy',
+        type=float,
+        default=612.2821044921875,
+    )
+
+    live_application(parser.parse_args())
