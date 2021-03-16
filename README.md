@@ -17,14 +17,14 @@ pip install -r requirements.txt
 ```
 
 ## Download Pretrain Model
-Download the pretrain model from [Google Drive](https://drive.google.com/file/d/1ZrGYm6SxfMHd6fqsEhkK2Dmyp57SFEYk/view?usp=sharing), and put the `model.py` in `./checkpoints`
+Download the pretrain model from [Google Drive](https://drive.google.com/file/d/1ZrGYm6SxfMHd6fqsEhkK2Dmyp57SFEYk/view?usp=sharing), and put the `model.pt` in `./checkpoints`
 
 ## Demo
 To process the image provided in `./demo`, run
 ```bash
 python demo.py
 ```
-You can also put your data in the fold, but remember to use the proper camera intrinsic like
+You can also put your data in the fold `./demo`, but remember to use the proper camera intrinsic like
 ```bash
 python demo.py --fx=612.0206 --fy=612.2821 --cx=321.2842 --cy=235.8609
 ```
@@ -32,10 +32,10 @@ If camera information is unavailable, run
 ```bash
 python demo_in_the_wild.py
 ```
-We recommand to use the camera intrinsic, which will improve the performance.
+We recommand you to utilize the camera intrinsic, which will improve the performance a lot.
 
 ## Realtime Demo
-Also remember to use the proper camera intrinsic, the following command is for RealSense D435
+To reconstruct the hand from image captured with a webcam,run the following command. Also remember to use the proper camera intrinsic, the following command is for RealSense D435
 ```bash
 python app.py --fx=612.0206 --fy=612.2821 --cx=321.2842 --cy=235.8609
 ```
