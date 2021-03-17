@@ -131,4 +131,4 @@ dmypy.json
 /out
 /checkpoints
 
-.MANO_RIGHT.pkl
+MANO_RIGHT.pkl
