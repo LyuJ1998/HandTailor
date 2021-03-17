@@ -12,6 +12,7 @@ import argparse
 from jax import grad, jit, vmap
 from jax.experimental import optimizers
 from torchvision.transforms import functional
+import pickle
 
 from manolayer import ManoLayer
 from model import HandNet
@@ -139,7 +140,8 @@ def live_application(arg):
     load_dict = checkpoint_io.load('checkpoints/model.pt')
     model.eval()
 
-    face = np.loadtxt("hand.npy").astype(np.int32)
+    dd = pickle.load(open("MANO_RIGHT.pkl", 'rb'), encoding='latin1')
+    face = np.array(dd['f'])
     renderer = utils.MeshRenderer(face, img_size=256)
     
     cx = arg.cx

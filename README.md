@@ -16,8 +16,14 @@ Please install the dependencies listed in `requirements.txt`.
 pip install -r requirements.txt
 ```
 
-## Download Pretrain Model
+## Download Model Files
+### Pretrain Model
 Download the pretrain model from [Google Drive](https://drive.google.com/file/d/1ZrGYm6SxfMHd6fqsEhkK2Dmyp57SFEYk/view?usp=sharing), and put the `model.pt` in `./checkpoints`
+### MANO Model
+- Go to [MANO website](http://mano.is.tue.mpg.de/)
+- Create an account by clicking *Sign Up* and provide your information
+- Download Models and Code (the downloaded file should have the format `mano_v*_*.zip`). Note that all code and data from this download falls under the [MANO license](http://mano.is.tue.mpg.de/license).
+- unzip and copy the `MANO_RIGHT.pkl` file into the folder
 
 ## Demo
 To process the image provided in `./demo`, run
