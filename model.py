@@ -411,7 +411,7 @@ class HandNetInTheWild(nn.Module):
         j1 = joint[:,0,:]
         j2 = joint[:,9,:]
         deltaj = j1 - j2
-        s = torch.sqrt((deltaj[0,0]**2 + deltaj[0,0]**2)/(1 - deltaj[0,2]**2))
+        s = torch.sqrt((deltaj[0,0]**2 + deltaj[0,1]**2)/(1 - deltaj[0,2]**2))
         joint[:,:,:2] = joint[:,:,:2]/s
         joint_root = joint[:,self.joint_root_idx,:].unsqueeze(1)
         joint_ = joint - joint_root
