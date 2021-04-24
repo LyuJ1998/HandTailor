@@ -166,24 +166,26 @@ def live_application(arg):
             if img.shape[0] > img.shape[1]:
                 margin = int((img.shape[0] - img.shape[1]) / 2)
                 img = img[margin:-margin]
-                cy = cy - margin
+                _cx = cx
+                _cy = cy - margin
                 width = img.shape[1]
             elif img.shape[0] < img.shape[1]:
                 margin = int((img.shape[1] - img.shape[0]) / 2)
                 img = img[:, margin:-margin]
-                cx = cx - margin
+                _cx = cx - margin
+                _cy = cy
             width = img.shape[0]
             img = cv2.resize(img, (256, 256),cv2.INTER_LINEAR)
             frame = img.copy()
 
-            cx = (cx * 256)/width
-            cy = (cy * 256)/width
-            fx = (fx * 256)/width
-            fy = (fy * 256)/width
+            _cx = (_cx * 256)/width
+            _cy = (_cy * 256)/width
+            _fx = (fx * 256)/width
+            _fy = (fy * 256)/width
 
             intr = torch.from_numpy(np.array([
-                        [fx, 0.0, cx],
-                        [0.0, fy, cy],
+                        [_fx, 0.0, _cx],
+                        [0.0, _fy, _cy],
                         [0.0, 0.0, 1.0],
                     ], dtype=np.float32)).unsqueeze(0).to(device)
 
