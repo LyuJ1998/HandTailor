@@ -163,17 +163,17 @@ def live_application(arg):
             img = np.array(Image.open(img_path))
             if img is None:
                 continue
+            _cx = cx
+            _cy = cy
             if img.shape[0] > img.shape[1]:
                 margin = int((img.shape[0] - img.shape[1]) / 2)
                 img = img[margin:-margin]
-                _cx = cx
                 _cy = cy - margin
                 width = img.shape[1]
             elif img.shape[0] < img.shape[1]:
                 margin = int((img.shape[1] - img.shape[0]) / 2)
                 img = img[:, margin:-margin]
                 _cx = cx - margin
-                _cy = cy
             width = img.shape[0]
             img = cv2.resize(img, (256, 256),cv2.INTER_LINEAR)
             frame = img.copy()
