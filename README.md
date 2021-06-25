@@ -2,7 +2,7 @@
 
 This repository is the implementation code and model of the paper "HandTailor: Towards High-Precision Monocular 3D Hand Recovery" ([arXiv](https://arxiv.org/abs/2102.09244))
 
-<img src="demo.gif" width="480">
+<img src="fig/demo.gif" width="480">
 
 ## Get the Code
 ```bash
@@ -49,6 +49,17 @@ When camera information is absence
 ```bash
 python app_in_the_wild.py
 ```
+When using HandTailor to recovery hand mesh, you need to make sure that the hand is in the dominate area of the image. To address this, we also implement a naive tracker.
+
+<img src="fig/demo_tracker.gif" width="480">
+
+Please run:
+
+```bash
+python app_with_tracker.py --fx=612.0206 --fy=612.2821 --cx=321.2842 --cy=235.8609
+```
+This is a quite simple tracker, so do not move your hand too fast. And once track lost, put your hand on the bounding box to fix it.
+
 ## Citation
 If you find this work helpful, please consider citing us
 ```
