@@ -1,6 +1,6 @@
 # HandTailor
 
-This repository is the implementation code and model of the paper "HandTailor: Towards High-Precision Monocular 3D Hand Recovery" (BMVC2021) ([paper](https://arxiv.org/abs/2102.09244)). You can find the video demo on the [webpage](https://sites.google.com/view/handtailor)
+This repository is the implementation code and model of the paper "HandTailor: Towards High-Precision Monocular 3D Hand Recovery" (BMVC2021) ([paper](https://arxiv.org/abs/2102.09244)). You can find the video demo on the [webpage](https://sites.google.com/view/handtailor).
 
 <img src="fig/demo.gif" width="480">
 
