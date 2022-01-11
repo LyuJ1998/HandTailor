@@ -106,8 +106,9 @@ class ManoLayer():
 
     def _lrotmin(self, p):
         p = p.ravel()[3:]
+        import numpy as npy
         return np.concatenate(
-            [(cv2.Rodrigues(pp)[0] - np.eye(3)).ravel()
+            [(cv2.Rodrigues(npy.array(pp))[0] - np.eye(3)).ravel()
             for pp in p.reshape((-1, 3))]).ravel()
 
 
