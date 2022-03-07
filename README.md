@@ -66,7 +66,7 @@ If you find this work helpful, please consider citing us
 @article{lv2021handtailor,
   title={HandTailor: Towards High-Precision Monocular 3D Hand Recovery},
   author={Lv, Jun and Xu, Wenqiang and Yang, Lixin and Qian, Sucheng and Mao, Chongzhao and Lu, Cewu},
-  journal={arXiv preprint arXiv:2102.09244},
+  booktitle={British Machine Vision Conference (BMVC)},
   year={2021}
 }
 ```
